@@ -13,7 +13,12 @@ fun Route.taskRouting() {
 
     get("/tasks/{id?}") {
         val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.NotFound, "Missing id")
-        val taskContoller = TaskController(call)
-        taskContoller.fetchTask(id.toInt())
+        val taskController = TaskController(call)
+        taskController.fetchTask(id.toInt())
+    }
+
+    get ("/tasks/hidden"){
+        val taskController = TaskController(call)
+        taskController.fetchHiddenTask()
     }
 }

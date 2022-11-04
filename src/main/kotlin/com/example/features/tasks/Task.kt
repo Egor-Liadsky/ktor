@@ -1,6 +1,7 @@
 package com.example.features.tasks
 
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.Column
 
 @Serializable
 data class TaskReceive(

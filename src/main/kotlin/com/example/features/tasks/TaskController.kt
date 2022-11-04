@@ -29,4 +29,8 @@ class TaskController(private val call: ApplicationCall) {
     suspend fun fetchTask(id: Int) {
         call.respond(HttpStatusCode.OK, TaskEntity.fetchTasks(id))
     }
+
+    suspend fun fetchHiddenTask(){
+        call.respond(HttpStatusCode.OK, TaskEntity.fetchHiddenTasks())
+    }
 }
