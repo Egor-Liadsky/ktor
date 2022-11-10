@@ -21,6 +21,7 @@ data class Tasks(
 
 @Serializable
 data class Task(
+    val id: Int,
     val fromId: Int,
     val toId: Int,
     val title: String,

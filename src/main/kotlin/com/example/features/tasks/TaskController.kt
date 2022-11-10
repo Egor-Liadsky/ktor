@@ -26,11 +26,17 @@ class TaskController(private val call: ApplicationCall) {
         call.respond(HttpStatusCode.Created, "Task created")
     }
 
-    suspend fun fetchTask(id: Int) {
-        call.respond(HttpStatusCode.OK, TaskEntity.fetchTasks(id))
+    suspend fun fetchAllTask(){
+        call.respond(HttpStatusCode.OK, TaskEntity.fetchAllTasks())
     }
 
     suspend fun fetchHiddenTask(){
         call.respond(HttpStatusCode.OK, TaskEntity.fetchHiddenTasks())
     }
+
+    suspend fun fetchTaskId(id: Int) {
+        call.respond(HttpStatusCode.OK, TaskEntity.fetchTasksId(id))
+    }
+
+
 }
