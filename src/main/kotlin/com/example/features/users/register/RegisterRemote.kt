@@ -2,7 +2,6 @@ package com.example.features.users.register
 
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data class RegisterReceiveRemote(
     val login: String,
@@ -14,4 +13,3 @@ data class RegisterReceiveRemote(
 data class RegisterResponseRemote(
     val token: String
 )
-

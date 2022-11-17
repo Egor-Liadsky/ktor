@@ -4,36 +4,35 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object UserEntity : Table("user") {
-    private val rowId = integer("id")
+object UserEntity : IntIdTable("users"){
     private val login = varchar("login", 25)
     private val email = varchar("email", 25)
     private val password = varchar("password", 25)
 
-    override val primaryKey = PrimaryKey(rowId, name = "id")
 
-    fun registerUser(userDTO: UserDTO) {
+    fun insert(userDTO: UserDTO){
         transaction {
+            SchemaUtils.create(UserEntity)
+            addLogger(StdOutSqlLogger)
             UserEntity.insert {
-                it[rowId] = rowId
-                it[email] = userDTO.email
                 it[login] = userDTO.login
+                it[email] = userDTO.email
                 it[password] = userDTO.password
             }
         }
     }
 
-    fun fetchUser(login: String): UserDTO? {
+    fun fetchUser(login: String):UserDTO?{
         return try {
             transaction {
                 val userEntity = UserEntity.select { UserEntity.login.eq(login) }.single()
                 UserDTO(
-                    login = login,
-                    email = userEntity[email],
-                    password = userEntity[password]
+                    login = userEntity[UserEntity.login],
+                    email = userEntity[UserEntity.email],
+                    password = userEntity[UserEntity.password]
                 )
             }
-        }catch (e: Exception) {
+        }catch (e: Exception){
             null
         }
     }

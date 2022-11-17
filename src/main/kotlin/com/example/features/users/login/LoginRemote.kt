@@ -12,4 +12,3 @@ data class LoginReceiveRemote(
 data class LoginResponseRemote(
     val token: String
 )
-

@@ -1,1 +1,1 @@
-rootProject.name = "ktor-tasks"
+rootProject.name = "ktor-docker"

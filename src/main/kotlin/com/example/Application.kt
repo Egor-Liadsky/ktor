@@ -1,24 +1,24 @@
 package com.example
 
+import com.example.features.users.login.loginRouting
+import com.example.features.users.register.registerRouting
 import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import com.example.plugins.*
-import com.example.utils.Constants
-import org.jetbrains.exposed.sql.Database
+import com.example.database.initDatabase
 
-fun main() {
-    embeddedServer(Netty, port = 8082, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
-}
+fun main(args: Array<String>): Unit =
+    io.ktor.server.netty.EngineMain.main(args)
 
+@Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    Database.connect(
-        "jdbc:postgresql://localhost:5432/${Constants.databaseName}",
-        driver = "org.postgresql.Driver",
-        user = Constants.userDb, password = Constants.passwordDb
-    )
-
+//    Database.connect(
+//        "jdbc:postgresql://localhost:5432/${Settings.databaseName}",
+//        driver = "org.postgresql.Driver",
+//        user = Settings.userDb, password = Settings.passwordDb
+//    )
+    initDatabase(environment.config)
+    loginRouting()
+    registerRouting()
     configureSerialization()
     configureRouting()
 }

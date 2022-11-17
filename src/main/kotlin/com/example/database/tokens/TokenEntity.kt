@@ -1,19 +1,22 @@
 package com.example.database.tokens
 
-import org.jetbrains.exposed.sql.*
+import com.example.database.users.UserEntity
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object TokenEntity : Table("tokens") {
-    private val rowId = integer("id")
+object TokenEntity : IntIdTable("tokens") {
     private val login = varchar("login", 25)
     private val token = varchar("token", 70)
 
-    override val primaryKey = PrimaryKey(rowId, name = "id")
 
     fun insert(tokenDTO: TokenDTO) {
         transaction {
+            SchemaUtils.create(TokenEntity)
             TokenEntity.insert {
-                it[rowId] = rowId
                 it[login] = tokenDTO.login
                 it[token] = tokenDTO.token
             }
@@ -23,12 +26,13 @@ object TokenEntity : Table("tokens") {
     fun fetchTokens(): List<TokenDTO> {
         return try {
             transaction {
-                TokenEntity.selectAll().toList().map {
-                    TokenDTO(
-                        token = it[token],
-                        login = it[login]
-                    )
-                }
+                TokenEntity.selectAll().toList()
+                    .map {
+                        TokenDTO(
+                            login = it[TokenEntity.login],
+                            token = it[TokenEntity.token]
+                        )
+                    }
             }
         } catch (e: Exception) {
             emptyList()

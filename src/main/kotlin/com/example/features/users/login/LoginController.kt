@@ -10,22 +10,19 @@ import io.ktor.server.response.*
 import java.util.UUID
 
 class LoginController(private val call: ApplicationCall) {
-    suspend fun performLogin() {
-        val receive = call.receive<LoginReceiveRemote>()
-        val userDTO = UserEntity.fetchUser(receive.login)
 
-        if (userDTO == null) {
+    suspend fun performLogin(){
+        val loginReceive = call.receive<LoginReceiveRemote>()
+        val userDTO = UserEntity.fetchUser(loginReceive.login)
+
+        if (userDTO == null){
             call.respond(HttpStatusCode.NotFound, "User not found")
         } else {
-            if (userDTO.password == receive.password) {
+            if (userDTO.password == loginReceive.password){
                 val token = UUID.randomUUID().toString()
-                TokenEntity.insert(
-                    TokenDTO(
-                        login = receive.login,
-                        token = token
-                    )
-                )
-                call.respond(LoginResponseRemote(token))
+                TokenEntity.insert(TokenDTO(login = loginReceive.login, token = token))
+
+                call.respond(LoginResponseRemote(token = token))
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Invalid password")
             }
